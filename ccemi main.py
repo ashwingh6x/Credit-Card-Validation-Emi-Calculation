@@ -21,11 +21,11 @@ def fancy_header(text):
     border = "╔" + "═" * (len(text) + 2) + "╗"
     middle = f"║ {text} ║"
     footer = "╚" + "═" * (len(text) + 2) + "╝"
-    print("\n" + border)
+    print("" + border)
     print(middle)
     print(footer)
 
-# Luhn Algorithm for Credit Card Validation definition
+# Luhn Algorithm for Credit Card Validation
 def vcard(cardno):
     cardno = cardno.replace(" ", "").replace("-", "")
     if not cardno.isdigit():
@@ -37,53 +37,59 @@ def vcard(cardno):
     for i in range(len(revdigits)):
         digit = int(revdigits[i])
         if i % 2 == 1:
-            digit = digit * 2
+            digit *= 2
             if digit > 9:
-                digit = digit - 9
-        total = total + digit
+                digit -= 9
+        total += digit
 
     return total % 10 == 0
 
-# Emi Calculation definition
+# EMI Calculation
 def calcemi(principal, intrate, months):
-    interest_rate = ((principal * intrate) / 100)
+    interest_rate = (principal * intrate) / 100
     emi_permonth = (interest_rate + principal) / months
     total_payment = principal + interest_rate
     total_interest = total_payment - principal
     return round(emi_permonth, 2), round(total_payment, 2), round(total_interest, 2)
 
-# Main Program and calling functions
-
+# Main Program with calling functions
 fancy_header("Credit Card Validation and EMI Calculator")
+
 def main():
-    print("*************************************************")
-    card = input("Enter your credit card number: ")
+    while True:
+        print("*************************************************")
+        print("Type 'cc' to Validate Credit Card")
+        print("Type 'emi' to Calculate EMI")
+        print("Type '0' to Exit")
+        value = input("Choose your Service : ")
+        print("*************************************************")
 
-    if vcard(card):
-        print("✅ Valid Credit Card")
-        print("Do you want to calculate EMI?")
-        value = input("Type 'emi' to Proceed or Enter '0' to Exit: ")
-        if value == "0":
+        if value == "cc":
+            card = input("Enter your credit card number: ")
+            if vcard(card):
+                print("✅ Valid Credit Card")
+            else:
+                print("❌ Invalid Credit Card Number")
+
+        elif value == "emi":
+            amount = float(input("Enter the amount (₹): "))
+            rate = float(input("Enter fixed interest rate (%): "))
+            tenure = int(input("Enter tenure (months): "))
+            emi, total, interest = calcemi(amount, rate, tenure)
+            print("📊 EMI Calculation:")
+            print(f"👉 EMI per month: ₹{emi}")
+            print(f"💰 Total amount payable: ₹{total}")
+            print(f"📈 Total interest payable: ₹{interest}")
+
+        elif value == "0":
             print("Thank you for using our services. Goodbye!")
-            exit()
-        if value == "emi":
-                amount = float(input("Enter the amount (₹): "))
-                rate = float(input("Enter fixed interest rate (%): "))
-                tenure = int(input("Enter tenure (months): "))
-                emi, total, interest = calcemi(amount, rate, tenure)
-                print("\n📊 EMI Calculation:")
-                print(f"👉 EMI per month: ₹{emi}")
-                print(f"💰 Total amount payable: ₹{total}")
-                print(f"📈 Total interest payable: ₹{interest}")
-    else:
-        print("❌ Invalid Credit Card Number")
+            return  # Exit program safely
 
-while True:
-    main()
-    choice = input("Press 'Enter' to validate again or Enter '0' to Exit: ")
-    if choice == "0":
-        print("Thank you for using our services. Goodbye!")
-        break
+        else:
+            print("⚠️ Invalid choice! Please type 'cc', 'emi', or '0'.")
 
+# Run the program
+main()
 # End of the program
+
 
